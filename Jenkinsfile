@@ -2,29 +2,21 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "port-scanner"
-        CONTAINER_NAME = "port-scanner-container"
+        IMAGE = "port-scanner"
+        CONTAINER = "port-scanner"
     }
 
     stages {
-        stage('Clone') {
-            steps {
-                git 'https://github.com/SAGAR97619/port-scanner.git'
-            }
-        }
 
-        stage('Build Image') {
+        stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                sh 'docker build -t $IMAGE .'
             }
         }
 
         stage('Stop Old Container') {
             steps {
-                sh '''
-                docker stop $CONTAINER_NAME || true
-                docker rm $CONTAINER_NAME || true
-                '''
+                sh 'docker rm -f $CONTAINER || true'
             }
         }
 
@@ -32,8 +24,8 @@ pipeline {
             steps {
                 sh '''
                 docker run -d -p 5000:5000 \
-                --name $CONTAINER_NAME \
-                $IMAGE_NAME
+                --name $CONTAINER \
+                $IMAGE
                 '''
             }
         }
