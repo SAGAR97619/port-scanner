@@ -8,7 +8,10 @@ app = Flask(__name__)
 def health():
     return jsonify({"status": "UP"})
 
-
+@app.route("/")
+def home():
+    return "Port Scanner API Running"
+    
 @app.route('/scan', methods=['POST'])
 def scan():
     data = request.get_json()
